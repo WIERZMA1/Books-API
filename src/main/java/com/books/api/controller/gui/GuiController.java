@@ -70,7 +70,6 @@ public class GuiController implements Initializable {
         searchBtn.setDisable(true);
         booksController.setTableCells();
         authorsController.setTableCells();
-        categoryList.getItems().add("-- Show All --");
         refreshCategoryList();
         checkActiveTab();
         checkSelectedCategory();
@@ -131,10 +130,12 @@ public class GuiController implements Initializable {
     @FXML
     public void handleDelete() {
         controller.deleteBook(booksController.getSelectedContent());
-        controller.getAllCategories().forEach(category -> categoryList.getItems().addAll(category.name));
+        refreshCategoryList();
     }
 
     private void refreshCategoryList() {
+        categoryList.getItems().removeAll();
+        categoryList.getItems().add("-- Show All --");
         controller.getAllCategories().forEach(category -> categoryList.getItems().addAll(category.name));
     }
 
