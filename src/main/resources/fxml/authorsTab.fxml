@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.books.api.controller.gui.AuthorsTabController"
+            prefHeight="400.0" prefWidth="600.0">
+    <TableView fx:id="authorsTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+               prefHeight="500.0" prefWidth="1500.0">
+        <columns>
+            <TableColumn fx:id="nameColumn" prefWidth="750.0" text="name"/>
+            <TableColumn fx:id="authorRatingColumn" prefWidth="750.0" text="rating"/>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+    </TableView>
+</AnchorPane>

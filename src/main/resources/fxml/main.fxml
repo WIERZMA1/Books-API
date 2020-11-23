@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.books.api.controller.gui.GuiController">
+    <children>
+        <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+            <children>
+                <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0">
+                    <children>
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleGetAll" text="GetAll" />
+                        <TextField fx:id="name" minHeight="-Infinity" minWidth="-Infinity" promptText="Name" />
+                        <Button fx:id="searchBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSearch" text="Search" />
+                        <Button fx:id="addBtn" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAdd" text="Add" />
+                        <Button fx:id="deleteBtn" alignment="CENTER_RIGHT" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDelete" text="Delete" />
+                  <Label text="Select category:" textAlignment="CENTER" />
+                  <ChoiceBox fx:id="categoryList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" opacity="0.75" prefWidth="150.0" />
+                    </children>
+                </HBox>
+                <TabPane fx:id="tabs" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                        <Tab fx:id="booksTab" text="Books">
+                            <fx:include source="booksTab.fxml" />
+                        </Tab>
+                        <Tab fx:id="authorsTab" text="Authors">
+                            <fx:include source="authorsTab.fxml" />
+                        </Tab>
+                    </tabs>
+                </TabPane>
+                <HBox alignment="BOTTOM_CENTER">
+                    <children>
+                        <Label fx:id="total" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minHeight="-Infinity" minWidth="-Infinity" text="Total: 0" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
