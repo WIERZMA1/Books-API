@@ -134,7 +134,7 @@ public class GuiController implements Initializable {
     }
 
     private void refreshCategoryList() {
-        categoryList.getItems().removeAll();
+        categoryList.getItems().clear();
         categoryList.getItems().add("-- Show All --");
         controller.getAllCategories().forEach(category -> categoryList.getItems().addAll(category.name));
     }
@@ -143,12 +143,16 @@ public class GuiController implements Initializable {
         categoryList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (newValue.equals("-- Show All --")) {
-                    handleGetAll();
+                if (newValue != null) {
+                    if (newValue.equals("-- Show All --")) {
+                        handleGetAll();
+                    } else {
+                        List<BookDto> books = new ArrayList<>(controller.getBooksByCategory(newValue));
+                        booksController.setTableContent(books);
+                        total.setText("Total: " + books.size());
+                    }
                 } else {
-                    List<BookDto> books = new ArrayList<>(controller.getBooksByCategory(newValue));
-                    booksController.setTableContent(books);
-                    total.setText("Total: " + books.size());
+                    booksController.setTableContent(new ArrayList<>());
                 }
             }
         });
