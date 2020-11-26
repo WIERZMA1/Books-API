@@ -7,7 +7,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -56,7 +56,7 @@ public class Book {
             joinColumns = @JoinColumn(name = "author_name"),
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
-    private List<Author> authors;
+    private Set<Author> authors;
 
     @Fetch(FetchMode.SELECT)
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Category.class)
@@ -65,5 +65,5 @@ public class Book {
             joinColumns = @JoinColumn(name = "category_name"),
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
-    private List<Category> categories;
+    private Set<Category> categories;
 }

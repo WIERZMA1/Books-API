@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -13,6 +13,6 @@ public class AuthorDto {
 
     public String name;
     public double rating;
-    public List<String> bookIds;
+    public Set<String> bookIds;
 
 }

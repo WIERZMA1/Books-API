@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -12,5 +12,5 @@ import java.util.List;
 public class CategoryDto {
 
     public String name;
-    public List<String> bookIds;
+    public Set<String> bookIds;
 }

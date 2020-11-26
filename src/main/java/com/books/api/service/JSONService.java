@@ -10,7 +10,9 @@ import org.json.JSONTokener;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class JSONService {
@@ -40,8 +42,8 @@ public class JSONService {
                 id = id != null ? id : jsonObject.getString("id");
                 JSONArray authorsArray = volumeInfo.optJSONArray("authors");
                 JSONArray categoriesArray = volumeInfo.optJSONArray("categories");
-                List<String> authors = new ArrayList<>();
-                List<String> categories = new ArrayList<>();
+                Set<String> authors = new HashSet<>();
+                Set<String> categories = new HashSet<>();
                 if (authorsArray != null) {
                     authorsArray.forEach(b -> authors.add(b.toString()));
                 }

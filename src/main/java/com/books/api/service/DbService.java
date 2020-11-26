@@ -10,9 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,21 +35,21 @@ public class DbService {
         return bookRepository.findById(id);
     }
 
-    public List<Book> searchBookContaining(final String str) {
+    public Set<Book> searchBookContaining(final String str) {
         return getAllBooks().stream()
                 .filter(b -> b.getTitle().toLowerCase().contains(str.toLowerCase())
                         || b.getSubtitle().toLowerCase().contains(str.toLowerCase()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
-    public List<Book> getAllBooksByCategory(final String category) {
+    public Set<Book> getAllBooksByCategory(final String category) {
         return categoryRepository.findById(category).isPresent() ?
-                categoryRepository.findById(category).get().getBooksList() : new ArrayList<>();
+                categoryRepository.findById(category).get().getBooksList() : new HashSet<>();
     }
 
-    public List<Book> getAllBooksByAuthor(final String author) {
+    public Set<Book> getAllBooksByAuthor(final String author) {
         return authorRepository.findById(author).isPresent() ?
-                authorRepository.findById(author).get().getBooksList() : new ArrayList<>();
+                authorRepository.findById(author).get().getBooksList() : new HashSet<>();
     }
 
     public Book saveBook(final Book book) {

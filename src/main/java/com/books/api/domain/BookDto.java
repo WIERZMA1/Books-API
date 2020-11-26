@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -22,7 +22,7 @@ public class BookDto {
     public String language;
     public String previewLink;
     public double rating;
-    public List<String> authors;
-    public List<String> categories;
+    public Set<String> authors;
+    public Set<String> categories;
 
 }

@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -46,8 +44,8 @@ class RestControllerTestSuite {
     @Test
     void createBook() throws BookNotFoundException {
         //Given
-        List<String> authors = new ArrayList<>(Arrays.asList("author", "other author"));
-        List<String> categories = new ArrayList<>(Arrays.asList("category", "other category"));
+        Set<String> authors = new HashSet<>(Arrays.asList("author", "other author"));
+        Set<String> categories = new HashSet<>(Arrays.asList("category", "other category"));
         BookDto book = new BookDto("id", "title", "subtitle", "", 20200910L, "description",
                 666, "", "PL", "", 3.3, authors, categories);
         // When

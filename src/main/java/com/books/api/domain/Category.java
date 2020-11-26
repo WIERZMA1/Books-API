@@ -6,8 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,9 +19,9 @@ public class Category {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "categories", targetEntity = Book.class)
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "categories", targetEntity = Book.class)
     @Column(name = "books")
-    private List<Book> booksList = new ArrayList<>();
+    private Set<Book> booksList;
 
     public Category(String name) {
         this.name = name;
