@@ -30,11 +30,12 @@ public class JSONService {
             try {
                 JSONObject jsonObject = (JSONObject) book;
                 JSONObject volumeInfo = jsonObject.getJSONObject("volumeInfo");
+                JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
                 JSONArray industryIdentifiers = volumeInfo.getJSONArray("industryIdentifiers");
 
                 String id = null;
-                for (int j = 0; j < industryIdentifiers.length(); j++) {
-                    JSONObject identifier = industryIdentifiers.getJSONObject(j);
+                for (int i = 0; i < industryIdentifiers.length(); i++) {
+                    JSONObject identifier = industryIdentifiers.getJSONObject(i);
                     id = identifier.getString("type").equals("ISBN_13") &&
                             !identifier.getString("identifier").isEmpty() ?
                             identifier.getString("identifier") : id;
@@ -50,10 +51,7 @@ public class JSONService {
                 if (categoriesArray != null) {
                     categoriesArray.forEach(c -> categories.add(c.toString().toLowerCase()));
                 }
-/*
-                String authors = (authorsArray == null) ? null : authorsArray.toString();
-                String categories = categoriesArray == null ? null : categoriesArray.toString();
-*/
+
                 BookDto bookDto = new BookDto(
                         id,
                         volumeInfo.optString("title"),
@@ -62,7 +60,7 @@ public class JSONService {
                         volumeInfo.optLong("publishedDate"),
                         volumeInfo.optString("description"),
                         volumeInfo.optInt("pageCount"),
-                        volumeInfo.optString("thumbnailUrl"),
+                        imageLinks.optString("thumbnailUrl"),
                         volumeInfo.optString("language"),
                         volumeInfo.optString("previewLink"),
                         volumeInfo.optDouble("averageRating"),
