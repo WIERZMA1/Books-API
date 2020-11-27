@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 public class GuiController implements Initializable {
 
     private static final String USER_DIR = "UserDir";
-    private Preferences pref = Preferences.userNodeForPackage(getClass());
+    private final Preferences pref = Preferences.userNodeForPackage(getClass());
     private File dir = new File(pref.get(USER_DIR, System.getProperty("user.dir")));
 
     @Autowired
@@ -38,9 +38,9 @@ public class GuiController implements Initializable {
     @Autowired
     AuthorsTabController authorsController = new AuthorsTabController();
     @Autowired
-    private RestController controller = new RestController();
+    private final RestController controller = new RestController();
     @Autowired
-    private JSONService jsonService = new JSONService();
+    private final JSONService jsonService = new JSONService();
 
     private boolean activeTab;
 
@@ -123,6 +123,8 @@ public class GuiController implements Initializable {
                     e.printStackTrace();
                 }
             }
+            dir = inputFiles.get(0).getParentFile();
+            pref.put(USER_DIR, dir.getAbsolutePath());
             handleGetAll();
         }
     }

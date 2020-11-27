@@ -53,17 +53,17 @@ public class RestController {
         return bookMapper.mapToBookDtoList(service.getAllBooksByAuthor(authorName));
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/books/{isbn}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/book/{isbn}")
     public void deleteBook(@PathVariable("isbn") String isbn) {
         service.deleteBook(isbn);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/books", consumes = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, value = "/book", consumes = APPLICATION_JSON_VALUE)
     public BookDto updateBook(@RequestBody BookDto bookDto) {
         return bookMapper.mapToBookDto(service.saveBook(bookMapper.mapToBook(bookDto)));
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/books", consumes = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = "/book", consumes = APPLICATION_JSON_VALUE)
     public void createBook(@RequestBody BookDto bookDto) {
         service.saveBook(bookMapper.mapToBook(bookDto));
     }
