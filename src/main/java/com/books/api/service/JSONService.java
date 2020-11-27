@@ -60,7 +60,7 @@ public class JSONService {
                         volumeInfo.optLong("publishedDate"),
                         volumeInfo.optString("description"),
                         volumeInfo.optInt("pageCount"),
-                        imageLinks.optString("thumbnailUrl"),
+                        imageLinks.optString("thumbnail"),
                         volumeInfo.optString("language"),
                         volumeInfo.optString("previewLink"),
                         volumeInfo.optDouble("averageRating"),
