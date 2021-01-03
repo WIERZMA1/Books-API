@@ -100,12 +100,15 @@ public class BookController {
     }
 
     public BookDto updateBookValues() {
+        long publishedDate = !publishedDateTextField.getText().equals("") ?
+                Long.parseLong(publishedDateTextField.getText()) : 0L;
+        int pageCount = !pageCountTextField.getText().equals("") ? Integer.parseInt(pageCountTextField.getText()) : 0;
+        double rating = !ratingTextField.getText().equals("") ? Double.parseDouble(ratingTextField.getText()) : 0.0;
+
         return new BookDto(isbnTextField.getText(), titleTextField.getText(), subtitleTextField.getText(),
-                publisherTextField.getText(), Long.parseLong(publishedDateTextField.getText()),
-                descriptionTextArea.getText(), Integer.parseInt(pageCountTextField.getText()),
+                publisherTextField.getText(), publishedDate, descriptionTextArea.getText(), pageCount,
                 thumbnailTextField.getText(), languageTextField.getText(), previewLinkTextField.getText(),
-                Double.parseDouble(ratingTextField.getText()),
-                retrieveSetFromString(authorsTextField.getText()),
+                rating, retrieveSetFromString(authorsTextField.getText()),
                 retrieveSetFromString(categoriesTextField.getText()));
     }
 
