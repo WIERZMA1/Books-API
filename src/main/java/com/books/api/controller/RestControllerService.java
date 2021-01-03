@@ -1,5 +1,6 @@
 package com.books.api.controller;
 
+import com.books.api.domain.Author;
 import com.books.api.domain.AuthorDto;
 import com.books.api.domain.BookDto;
 import com.books.api.domain.CategoryDto;
@@ -8,6 +9,7 @@ import com.books.api.mapper.BookMapper;
 import com.books.api.mapper.CategoryMapper;
 import com.books.api.service.DbService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,9 +17,9 @@ import java.util.List;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @CrossOrigin(origins = "*")
-@org.springframework.web.bind.annotation.RestController
+@RestController
 @RequestMapping("/api")
-public class RestController {
+public class RestControllerService {
 
     @Autowired
     private DbService service;
@@ -71,6 +73,11 @@ public class RestController {
     @RequestMapping(method = RequestMethod.GET, value = "/authors")
     public List<AuthorDto> getAuthors() {
         return authorMapper.mapToAuthorDtoList(service.getAllAuthors());
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/author/{name}")
+    public AuthorDto getAuthor(@PathVariable("name") String name) {
+        return authorMapper.mapToAuthorDto(service.getAuthor(name).orElse(new Author()));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/author/search")

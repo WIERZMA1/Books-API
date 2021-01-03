@@ -3,18 +3,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.books.api.controller.gui.GuiController">
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.books.api.controller.gui.GuiController">
     <children>
         <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
             <children>
                 <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0">
                     <children>
+                  <Button fx:id="openBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOpen" text="Open" />
                         <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleGetAll" text="GetAll" />
                         <TextField fx:id="name" minHeight="-Infinity" minWidth="-Infinity" promptText="Name" />
                         <Button fx:id="searchBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSearch" text="Search" />
                         <Button fx:id="addBtn" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAdd" text="Add" />
                         <Button fx:id="deleteBtn" alignment="CENTER_RIGHT" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDelete" text="Delete" />
-                  <Label text="Select category:" textAlignment="CENTER" />
+                  <Label fx:id="categoryLabel" text="Select category:" textAlignment="CENTER" />
                   <ChoiceBox fx:id="categoryList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" opacity="0.75" prefWidth="150.0" />
                     </children>
                 </HBox>

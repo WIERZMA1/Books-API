@@ -5,11 +5,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Controller
+@Service
 public class BooksTabController {
 
     @FXML
@@ -28,12 +28,12 @@ public class BooksTabController {
     private TableColumn<BookDto, List<String>> categoriesColumn;
 
     public void setTableCells() {
-        isbnColumn.setCellValueFactory(new PropertyValueFactory<BookDto, String>("isbn"));
-        titleColumn.setCellValueFactory(new PropertyValueFactory<BookDto, String>("title"));
-        subtitleColumn.setCellValueFactory(new PropertyValueFactory<BookDto, String>("subtitle"));
-        bookRatingColumn.setCellValueFactory(new PropertyValueFactory<BookDto, Double>("rating"));
-        authorsColumn.setCellValueFactory(new PropertyValueFactory<BookDto, List<String>>("authors"));
-        categoriesColumn.setCellValueFactory(new PropertyValueFactory<BookDto, List<String>>("categories"));
+        isbnColumn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        subtitleColumn.setCellValueFactory(new PropertyValueFactory<>("subtitle"));
+        bookRatingColumn.setCellValueFactory(new PropertyValueFactory<>("rating"));
+        authorsColumn.setCellValueFactory(new PropertyValueFactory<>("authors"));
+        categoriesColumn.setCellValueFactory(new PropertyValueFactory<>("categories"));
     }
 
     public void setTableContent(List<BookDto> books) {
@@ -41,6 +41,11 @@ public class BooksTabController {
     }
 
     public String getSelectedContent() {
-        return booksTable.getSelectionModel().getSelectedItem().getIsbn();
+        return booksTable.getSelectionModel().getSelectedItem() != null
+                ? booksTable.getSelectionModel().getSelectedItem().getIsbn() : "";
+    }
+
+    public int getItemsSize() {
+        return booksTable.getItems().size();
     }
 }

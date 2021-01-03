@@ -14,7 +14,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication
 public class BooksMainApp extends Application {
 
-    private ConfigurableApplicationContext springContext;
+    public static ConfigurableApplicationContext springContext;
+    public static Scene primaryScene;
     private FXMLLoader fxmlLoader;
 
     @Override
@@ -32,8 +33,8 @@ public class BooksMainApp extends Application {
             rootNode = fxmlLoader.load();
             primaryStage.setTitle("Books");
             primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/books.png")));
-            Scene scene = new Scene(rootNode);
-            primaryStage.setScene(scene);
+            primaryScene = new Scene(rootNode);
+            primaryStage.setScene(primaryScene);
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();

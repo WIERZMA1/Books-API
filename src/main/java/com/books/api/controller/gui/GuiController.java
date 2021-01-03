@@ -1,18 +1,17 @@
 package com.books.api.controller.gui;
 
-import com.books.api.controller.RestController;
+import com.books.api.controller.BookNotFoundException;
+import com.books.api.controller.RestControllerService;
 import com.books.api.domain.AuthorDto;
 import com.books.api.domain.BookDto;
 import com.books.api.service.JSONService;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +25,7 @@ import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Controller
+@Service
 public class GuiController implements Initializable {
 
     private static final String USER_DIR = "UserDir";
@@ -34,20 +33,26 @@ public class GuiController implements Initializable {
     private File dir = new File(pref.get(USER_DIR, System.getProperty("user.dir")));
 
     @Autowired
-    BooksTabController booksController = new BooksTabController();
+    private BooksTabController booksTabController;
     @Autowired
-    AuthorsTabController authorsController = new AuthorsTabController();
+    private AuthorsTabController authorsTabController;
     @Autowired
-    private final RestController controller = new RestController();
+    private BookController bookController;
     @Autowired
-    private final JSONService jsonService = new JSONService();
+    private RestControllerService restController;
+    @Autowired
+    private JSONService jsonService;
 
-    private boolean activeTab;
+    private boolean isActiveTabBooks;
+    private boolean isBookSelected;
+    private boolean isAuthorSelected;
 
     @FXML
     private TextField name;
     @FXML
     private Label total;
+    @FXML
+    private Button openBtn;
     @FXML
     private Button searchBtn;
     @FXML
@@ -55,52 +60,69 @@ public class GuiController implements Initializable {
     @FXML
     private Button deleteBtn;
     @FXML
+    private Label categoryLabel;
+    @FXML
     private ChoiceBox<String> categoryList;
 
     @FXML
     private TabPane tabs;
     @FXML
     private Tab booksTab;
-
-    public GuiController() {
-    }
+    @FXML
+    private Tab authorsTab;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         searchBtn.setDisable(true);
-        booksController.setTableCells();
-        authorsController.setTableCells();
+        openBtn.setDisable(true);
+        booksTabController.setTableCells();
+        authorsTabController.setTableCells();
+        addBookListener();
+        addAuthorListener();
         refreshCategoryList();
         checkActiveTab();
         checkSelectedCategory();
         checkTextLength();
+        tabs.getSelectionModel().select(authorsTab);
+        tabs.getSelectionModel().select(booksTab);
     }
 
     @FXML
     public void handleGetAll() {
-        if (activeTab) {
-            List<BookDto> books = new ArrayList<>(controller.getBooks());
-            booksController.setTableContent(books);
-            total.setText("Total: " + books.size());
+        if (isActiveTabBooks) {
+            List<BookDto> books = new ArrayList<>(restController.getBooks());
+            booksTabController.setTableContent(books);
+            categoryList.setValue("-- Show All --");
         } else {
-            List<AuthorDto> authors = new ArrayList<>(controller.getAuthors());
-            authorsController.setTableContent(authors);
-            total.setText("Total: " + authors.size());
+            List<AuthorDto> authors = new ArrayList<>(restController.getAuthors());
+            authorsTabController.setTableContent(authors);
+        }
+        refreshTotalLabel();
+    }
+
+    @FXML
+    public void handleOpen() throws BookNotFoundException {
+        if (isActiveTabBooks) {
+            bookController.showBookWindow(restController.getBook(booksTabController.getSelectedContent()));
+        } else {
+            List<BookDto> books = new ArrayList<>(restController.getBooksByAuthor(authorsTabController.getSelectedContent()));
+            tabs.getSelectionModel().select(booksTab);
+            booksTabController.setTableContent(books);
+            refreshTotalLabel();
         }
     }
 
     @FXML
     public void handleSearch() {
         if (name.getText().length() >= 3) {
-            if (activeTab) {
-                List<BookDto> books = new ArrayList<>(controller.searchBook(name.getText()));
-                booksController.setTableContent(books);
-                total.setText("Total: " + books.size());
+            if (isActiveTabBooks) {
+                List<BookDto> books = new ArrayList<>(restController.searchBook(name.getText()));
+                booksTabController.setTableContent(books);
             } else {
-                List<AuthorDto> authors = new ArrayList<>(controller.searchAuthor(name.getText()));
-                authorsController.setTableContent(authors);
-                total.setText("Total: " + authors.size());
+                List<AuthorDto> authors = new ArrayList<>(restController.searchAuthor(name.getText()));
+                authorsTabController.setTableContent(authors);
             }
+            refreshTotalLabel();
         }
     }
 
@@ -116,7 +138,7 @@ public class GuiController implements Initializable {
                     String jsonFile = lines.collect(Collectors.joining(System.lineSeparator()));
                     List<BookDto> books = jsonService.parseJson(jsonFile);
                     for (BookDto book : books) {
-                        controller.createBook(book);
+                        restController.createBook(book);
                     }
                     refreshCategoryList();
                 } catch (IOException e) {
@@ -131,46 +153,70 @@ public class GuiController implements Initializable {
 
     @FXML
     public void handleDelete() {
-        controller.deleteBook(booksController.getSelectedContent());
+        restController.deleteBook(booksTabController.getSelectedContent());
         refreshCategoryList();
     }
 
     private void refreshCategoryList() {
         categoryList.getItems().clear();
         categoryList.getItems().add("-- Show All --");
-        controller.getAllCategories().forEach(category -> categoryList.getItems().addAll(category.name));
+        restController.getAllCategories().forEach(category -> categoryList.getItems().addAll(category.name));
+    }
+
+    private void refreshTotalLabel() {
+        total.setText(isActiveTabBooks ? "Total: " + booksTabController.getItemsSize()
+                : "Total: " + authorsTabController.getItemsSize());
     }
 
     private void checkSelectedCategory() {
-        categoryList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (newValue != null) {
-                    if (newValue.equals("-- Show All --")) {
-                        handleGetAll();
-                    } else {
-                        List<BookDto> books = new ArrayList<>(controller.getBooksByCategory(newValue));
-                        booksController.setTableContent(books);
-                        total.setText("Total: " + books.size());
-                    }
+        categoryList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if (newValue.equals("-- Show All --")) {
+                    handleGetAll();
                 } else {
-                    booksController.setTableContent(new ArrayList<>());
+                    List<BookDto> books = new ArrayList<>(restController.getBooksByCategory(newValue));
+                    booksTabController.setTableContent(books);
+                    refreshTotalLabel();
                 }
+            } else {
+                booksTabController.setTableContent(new ArrayList<>());
             }
         });
     }
 
     private void checkActiveTab() {
         tabs.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
-            activeTab = newTab.equals(booksTab);
-            addBtn.setVisible(activeTab);
-            deleteBtn.setVisible(activeTab);
+            isActiveTabBooks = newTab.equals(booksTab);
+            addBtn.setVisible(isActiveTabBooks);
+            deleteBtn.setVisible(isActiveTabBooks);
+            categoryLabel.setVisible(isActiveTabBooks);
+            categoryList.setVisible(isActiveTabBooks);
+            openBtn.setText(isActiveTabBooks ? "Open" : "Get Books");
+            updateOpenButton();
+            refreshTotalLabel();
         });
     }
 
-    private void checkTextLength() {
-        name.setOnKeyReleased(e -> {
-            searchBtn.setDisable(name.getLength() < 3);
+    public void addBookListener() {
+        booksTabController.booksTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            isBookSelected = newValue != null;
+            updateOpenButton();
         });
+    }
+
+    public void addAuthorListener() {
+        authorsTabController.authorsTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            isAuthorSelected = newValue != null;
+            updateOpenButton();
+        });
+    }
+
+    private void updateOpenButton() {
+        openBtn.setDisable(isActiveTabBooks && !isBookSelected
+                || !isActiveTabBooks && !isAuthorSelected);
+    }
+
+    private void checkTextLength() {
+        name.setOnKeyReleased(e -> searchBtn.setDisable(name.getLength() < 3));
     }
 }
