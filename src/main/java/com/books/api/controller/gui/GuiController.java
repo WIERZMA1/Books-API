@@ -10,7 +10,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +75,8 @@ public class GuiController implements Initializable {
     @FXML
     private Tab authorsTab;
 
+    private int lastAction;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         searchBtn.setDisable(true);
@@ -107,6 +108,7 @@ public class GuiController implements Initializable {
             authorsTabController.setTableContent(authors);
         }
         refreshTotalLabel();
+        lastAction = 1;
     }
 
     @FXML
@@ -115,10 +117,12 @@ public class GuiController implements Initializable {
             bookController.showBookWindow();
             bookController.populateBookValues(restController.getBook(booksTabController.getSelectedContent()));
         } else {
-            List<BookDto> books = new ArrayList<>(restController.getBooksByAuthor(authorsTabController.getSelectedContent()));
+            String author = authorsTabController.getSelectedContent();
+            List<BookDto> books = new ArrayList<>(restController.getBooksByAuthor(author));
             tabs.getSelectionModel().select(booksTab);
             booksTabController.setTableContent(books);
             refreshTotalLabel();
+            lastAction = 3;
         }
     }
 
@@ -157,7 +161,6 @@ public class GuiController implements Initializable {
             }
             dir = inputFiles.get(0).getParentFile();
             pref.put(USER_DIR, dir.getAbsolutePath());
-            handleGetAll();
         }
     }
 
@@ -167,9 +170,12 @@ public class GuiController implements Initializable {
     }
 
     @FXML
-    private void handleDelete() {
+    private void handleDelete() throws BookNotFoundException {
         restController.deleteBook(booksTabController.getSelectedContent());
+        String selectedCategory = categoryList.getSelectionModel().getSelectedItem();
         refreshCategoryList();
+        categoryList.setValue(selectedCategory);
+        retrieveLastAction();
     }
 
     private void refreshCategoryList() {
@@ -183,19 +189,24 @@ public class GuiController implements Initializable {
                 : "Total: " + authorsTabController.getItemsSize());
     }
 
+    private void showBooksByCategory(String category) {
+        if (category != null) {
+            List<BookDto> books = new ArrayList<>(restController.getBooksByCategory(category));
+            booksTabController.setTableContent(books);
+            refreshTotalLabel();
+        } else {
+            booksTabController.setTableContent(new ArrayList<>());
+        }
+    }
+
     private void checkSelectedCategory() {
         categoryList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                if (newValue.equals("-- Show All --")) {
-                    handleGetAll();
-                } else {
-                    List<BookDto> books = new ArrayList<>(restController.getBooksByCategory(newValue));
-                    booksTabController.setTableContent(books);
-                    refreshTotalLabel();
-                }
+            if (newValue != null && newValue.equals("-- Show All --")) {
+                handleGetAll();
             } else {
-                booksTabController.setTableContent(new ArrayList<>());
+                showBooksByCategory(newValue);
             }
+            lastAction = 2;
         });
     }
 
@@ -234,5 +245,30 @@ public class GuiController implements Initializable {
 
     private void checkTextLength() {
         name.setOnKeyReleased(e -> searchBtn.setDisable(name.getLength() < 3));
+    }
+
+    public void retrieveLastAction() throws BookNotFoundException {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
+        switch (lastAction) {
+            // Get All
+            case 1:
+                handleGetAll();
+                break;
+            // Select Category
+            case 2:
+                categoryList.setValue(categoryList.getSelectionModel().getSelectedItem());
+                break;
+            // Open Author's Books
+            case 3:
+                tabs.getSelectionModel().select(authorsTab);
+                handleOpen();
+                break;
+            default:
+                break;
+        }
     }
 }

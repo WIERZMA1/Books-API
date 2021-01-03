@@ -19,14 +19,14 @@ public class BooksMainApp extends Application {
     private FXMLLoader fxmlLoader;
 
     @Override
-    public void init() throws Exception {
+    public void init() {
         springContext = SpringApplication.run(BooksMainApp.class);
         fxmlLoader = new FXMLLoader();
         fxmlLoader.setControllerFactory(springContext::getBean);
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         fxmlLoader.setLocation(getClass().getResource("/fxml/main.fxml"));
         Parent rootNode;
         try {
