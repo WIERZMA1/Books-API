@@ -103,7 +103,8 @@ public class GuiController implements Initializable {
     @FXML
     public void handleOpen() throws BookNotFoundException {
         if (isActiveTabBooks) {
-            bookController.showBookWindow(restController.getBook(booksTabController.getSelectedContent()));
+            bookController.showBookWindow();
+            bookController.populateBookValues(restController.getBook(booksTabController.getSelectedContent()));
         } else {
             List<BookDto> books = new ArrayList<>(restController.getBooksByAuthor(authorsTabController.getSelectedContent()));
             tabs.getSelectionModel().select(booksTab);

@@ -31,6 +31,7 @@ public class BookController {
 
     @Autowired
     private RestControllerService restController;
+    private Stage stage;
 
     @FXML
     Label isbnLabel = new Label();
@@ -61,22 +62,18 @@ public class BookController {
 
     @FXML
     private void closeWindow() {
-        Stage stage = (Stage) isbnLabel.getScene().getWindow();
+        stage = (Stage) isbnLabel.getScene().getWindow();
         stage.close();
     }
 
-    public void showBookWindow(BookDto book) {
+    public void showBookWindow() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/book.fxml"));
             fxmlLoader.setControllerFactory(springContext::getBean);
             Parent root = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setTitle(book.title);
+            stage = new Stage();
             stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/book.png")));
-/*            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initStyle(StageStyle.UNDECORATED);*/
             stage.setScene(new Scene(root, primaryScene.getWidth(), primaryScene.getHeight()));
-            populateBookValues(book);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,6 +81,7 @@ public class BookController {
     }
 
     public void populateBookValues(BookDto book) {
+        stage.setTitle(book.title);
         isbnLabel.setText(book.isbn);
         titleTextField.setText(book.title);
         subtitleTextField.setText(book.subtitle);
