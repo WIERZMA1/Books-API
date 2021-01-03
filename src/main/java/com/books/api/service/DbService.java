@@ -64,6 +64,10 @@ public class DbService {
         return authorRepository.findAll();
     }
 
+    public Optional<Author> getAuthor(String name) {
+        return authorRepository.findById(name);
+    }
+
     public List<Author> searchAuthorContaining(final String str) {
         return getAllAuthors().stream()
                 .filter(a -> a.getName().toLowerCase().contains(str.toLowerCase()))

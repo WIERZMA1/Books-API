@@ -15,7 +15,7 @@ import java.util.*;
 class RestControllerTestSuite {
 
     @Autowired
-    RestController restController;
+    RestControllerService restController;
 
     @Test
     void getBooks() {
