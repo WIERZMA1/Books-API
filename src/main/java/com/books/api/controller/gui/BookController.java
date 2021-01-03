@@ -1,10 +1,8 @@
 package com.books.api.controller.gui;
 
 
-import com.books.api.BooksMainApp;
 import com.books.api.controller.RestControllerService;
 import com.books.api.domain.BookDto;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,9 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +30,7 @@ public class BookController {
     private Stage stage;
 
     @FXML
-    Label isbnLabel = new Label();
+    TextField isbnTextField = new TextField();
     @FXML
     TextField titleTextField = new TextField();
     @FXML
@@ -62,7 +58,7 @@ public class BookController {
 
     @FXML
     private void closeWindow() {
-        stage = (Stage) isbnLabel.getScene().getWindow();
+        stage = (Stage) isbnTextField.getScene().getWindow();
         stage.close();
     }
 
@@ -82,7 +78,8 @@ public class BookController {
 
     public void populateBookValues(BookDto book) {
         stage.setTitle(book.title);
-        isbnLabel.setText(book.isbn);
+        isbnTextField.setText(book.isbn);
+        isbnTextField.setEditable(false);
         titleTextField.setText(book.title);
         subtitleTextField.setText(book.subtitle);
         publisherTextField.setText(book.publisher);
@@ -103,7 +100,7 @@ public class BookController {
     }
 
     public BookDto updateBookValues() {
-        return new BookDto(isbnLabel.getText(), titleTextField.getText(), subtitleTextField.getText(),
+        return new BookDto(isbnTextField.getText(), titleTextField.getText(), subtitleTextField.getText(),
                 publisherTextField.getText(), Long.parseLong(publishedDateTextField.getText()),
                 descriptionTextArea.getText(), Integer.parseInt(pageCountTextField.getText()),
                 thumbnailTextField.getText(), languageTextField.getText(), previewLinkTextField.getText(),

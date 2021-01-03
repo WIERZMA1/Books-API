@@ -39,7 +39,7 @@
         <Label text="Rating" GridPane.rowIndex="10" />
         <Label text="Authors" GridPane.rowIndex="11" />
         <Label text="Categories" GridPane.rowIndex="12" />
-        <Label fx:id="isbnLabel" GridPane.columnIndex="1" />
+        <TextField fx:id="isbnTextField" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" />
         <TextField fx:id="titleTextField" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
         <TextField fx:id="subtitleTextField" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
         <TextField fx:id="publisherTextField" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS" />
