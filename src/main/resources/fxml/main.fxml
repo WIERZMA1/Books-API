@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.books.api.controller.gui.GuiController">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.books.api.controller.gui.GuiController">
     <children>
-        <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+        <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
             <children>
                 <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0">
                     <children>
-                  <Button fx:id="openBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOpen" text="Open" />
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleGetAll" text="GetAll" />
-                        <TextField fx:id="name" minHeight="-Infinity" minWidth="-Infinity" promptText="Name" />
-                        <Button fx:id="searchBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSearch" text="Search" />
-                        <Button fx:id="addBtn" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAdd" text="Add" />
-                        <Button fx:id="deleteBtn" alignment="CENTER_RIGHT" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDelete" text="Delete" />
-                  <Label fx:id="categoryLabel" text="Select category:" textAlignment="CENTER" />
-                  <ChoiceBox fx:id="categoryList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" opacity="0.75" prefWidth="150.0" />
+                        <Button fx:id="openBtn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOpen" text="Open" />
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleGetAll" text="Get All" />
+                        <TextField fx:id="name" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" promptText="Name" />
+                        <Button fx:id="searchBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSearch" />
+                        <Button fx:id="addJSONBtn" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddJSON" />
+                        <Button fx:id="addBtn" mnemonicParsing="false" onAction="#handleAdd" />
+                        <Button fx:id="deleteBtn" alignment="CENTER_RIGHT" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDelete" />
+                        <Label fx:id="categoryLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Select category:" textAlignment="CENTER" />
+                        <ChoiceBox fx:id="categoryList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" opacity="0.75" prefWidth="150.0" />
                     </children>
+                    <padding>
+                        <Insets left="5.0" right="5.0" />
+                    </padding>
                 </HBox>
-                <TabPane fx:id="tabs" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE">
+                <TabPane fx:id="tabs" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                     <tabs>
                         <Tab fx:id="booksTab" text="Books">
                             <fx:include source="booksTab.fxml" />

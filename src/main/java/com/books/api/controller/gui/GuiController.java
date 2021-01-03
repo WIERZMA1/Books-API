@@ -8,6 +8,9 @@ import com.books.api.service.JSONService;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +59,8 @@ public class GuiController implements Initializable {
     @FXML
     private Button searchBtn;
     @FXML
+    private Button addJSONBtn;
+    @FXML
     private Button addBtn;
     @FXML
     private Button deleteBtn;
@@ -75,6 +80,10 @@ public class GuiController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         searchBtn.setDisable(true);
         openBtn.setDisable(true);
+        searchBtn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/search.png"))));
+        addJSONBtn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/addJSON.png"))));
+        addBtn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/add.png"))));
+        deleteBtn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/delete.png"))));
         booksTabController.setTableCells();
         authorsTabController.setTableCells();
         addBookListener();
@@ -128,7 +137,7 @@ public class GuiController implements Initializable {
     }
 
     @FXML
-    public void handleAdd() throws JSONException {
+    public void handleAddJSON() throws JSONException {
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(dir);
         List<File> inputFiles = fc.showOpenMultipleDialog(null);
@@ -153,7 +162,12 @@ public class GuiController implements Initializable {
     }
 
     @FXML
-    public void handleDelete() {
+    private void handleAdd() {
+        bookController.showBookWindow();
+    }
+
+    @FXML
+    private void handleDelete() {
         restController.deleteBook(booksTabController.getSelectedContent());
         refreshCategoryList();
     }
@@ -188,6 +202,7 @@ public class GuiController implements Initializable {
     private void checkActiveTab() {
         tabs.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
             isActiveTabBooks = newTab.equals(booksTab);
+            addJSONBtn.setVisible(isActiveTabBooks);
             addBtn.setVisible(isActiveTabBooks);
             deleteBtn.setVisible(isActiveTabBooks);
             categoryLabel.setVisible(isActiveTabBooks);

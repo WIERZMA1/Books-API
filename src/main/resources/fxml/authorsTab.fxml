@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.books.api.controller.gui.AuthorsTabController"
-            prefHeight="400.0" prefWidth="600.0">
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.books.api.controller.gui.AuthorsTabController">
     <TableView fx:id="authorsTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-               prefHeight="500.0" prefWidth="1500.0">
+               minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="1500.0"
+               AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+               AnchorPane.topAnchor="0">
         <columns>
             <TableColumn fx:id="nameColumn" prefWidth="750.0" text="name"/>
             <TableColumn fx:id="authorRatingColumn" prefWidth="750.0" text="rating"/>

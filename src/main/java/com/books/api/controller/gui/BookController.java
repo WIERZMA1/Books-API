@@ -102,7 +102,7 @@ public class BookController {
         restController.updateBook(updateBookValues());
     }
 
-    private BookDto updateBookValues() {
+    public BookDto updateBookValues() {
         return new BookDto(isbnLabel.getText(), titleTextField.getText(), subtitleTextField.getText(),
                 publisherTextField.getText(), Long.parseLong(publishedDateTextField.getText()),
                 descriptionTextArea.getText(), Integer.parseInt(pageCountTextField.getText()),
