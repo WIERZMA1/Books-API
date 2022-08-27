@@ -7,6 +7,7 @@ import com.books.api.domain.BookDto;
 import com.books.api.service.JSONService;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,10 +23,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.books.api.controller.gui.LastView.*;
 
 @Service
 public class GuiController implements Initializable {
@@ -75,16 +79,17 @@ public class GuiController implements Initializable {
     @FXML
     private Tab authorsTab;
 
-    private int lastAction;
+    private LastView lastView;
+    private final static String SHOW_ALL = "-- Show All --";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         searchBtn.setDisable(true);
         openBtn.setDisable(true);
-        searchBtn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/search.png"))));
-        addJSONBtn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/addJSON.png"))));
-        addBtn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/add.png"))));
-        deleteBtn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/delete.png"))));
+        searchBtn.setGraphic(setImage("/images/search.png"));
+        addJSONBtn.setGraphic(setImage("/images/addJSON.png"));
+        addBtn.setGraphic(setImage("/images/add.png"));
+        deleteBtn.setGraphic(setImage("/images/delete.png"));
         booksTabController.setTableCells();
         authorsTabController.setTableCells();
         addBookListener();
@@ -102,13 +107,13 @@ public class GuiController implements Initializable {
         if (isActiveTabBooks) {
             List<BookDto> books = new ArrayList<>(restController.getBooks());
             booksTabController.setTableContent(books);
-            categoryList.setValue("-- Show All --");
+            categoryList.setValue(SHOW_ALL);
         } else {
             List<AuthorDto> authors = new ArrayList<>(restController.getAuthors());
             authorsTabController.setTableContent(authors);
         }
         refreshTotalLabel();
-        lastAction = 1;
+        lastView = ALL_BOOKS;
     }
 
     @FXML
@@ -122,7 +127,7 @@ public class GuiController implements Initializable {
             tabs.getSelectionModel().select(booksTab);
             booksTabController.setTableContent(books);
             refreshTotalLabel();
-            lastAction = 3;
+            lastView = BOOKS_BY_AUTHOR;
         }
     }
 
@@ -174,13 +179,13 @@ public class GuiController implements Initializable {
         restController.deleteBook(booksTabController.getSelectedContent());
         String selectedCategory = categoryList.getSelectionModel().getSelectedItem();
         refreshCategoryList();
-        categoryList.setValue(selectedCategory);
-        retrieveLastAction();
+        if (!selectedCategory.equals(SHOW_ALL)) { categoryList.setValue(selectedCategory); }
+        retrieveLastView();
     }
 
     private void refreshCategoryList() {
         categoryList.getItems().clear();
-        categoryList.getItems().add("-- Show All --");
+        categoryList.getItems().add(SHOW_ALL);
         restController.getAllCategories().forEach(category -> categoryList.getItems().addAll(category.name));
     }
 
@@ -201,12 +206,12 @@ public class GuiController implements Initializable {
 
     private void checkSelectedCategory() {
         categoryList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && newValue.equals("-- Show All --")) {
+            if (newValue.equals(SHOW_ALL)) {
                 handleGetAll();
             } else {
                 showBooksByCategory(newValue);
             }
-            lastAction = 2;
+            lastView = BOOKS_FROM_CATEGORY;
         });
     }
 
@@ -247,28 +252,29 @@ public class GuiController implements Initializable {
         name.setOnKeyReleased(e -> searchBtn.setDisable(name.getLength() < 3));
     }
 
-    public void retrieveLastAction() throws BookNotFoundException {
+    private void retrieveLastView() throws BookNotFoundException {
         try {
             Thread.sleep(500);
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }
-        switch (lastAction) {
-            // Get All
-            case 1:
+        switch (lastView) {
+            case ALL_BOOKS:
                 handleGetAll();
                 break;
-            // Select Category
-            case 2:
+            case BOOKS_FROM_CATEGORY:
                 categoryList.setValue(categoryList.getSelectionModel().getSelectedItem());
                 break;
-            // Open Author's Books
-            case 3:
+            case BOOKS_BY_AUTHOR:
                 tabs.getSelectionModel().select(authorsTab);
                 handleOpen();
                 break;
             default:
                 break;
         }
+    }
+
+    private Node setImage(String image) {
+        return new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(image))));
     }
 }
